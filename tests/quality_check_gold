@@ -1,0 +1,39 @@
+/*
+============================================
+Quality Check
+============================================
+Script Purpose
+	This script perform quality check to validate the integrety,consistency
+	accuracy of the gold layer. These checks are ensure:
+	-Uniquness of surrogate keys in deminsion tables.
+	-Refential integrity between facts and dimension tables.
+	-Validation of relationship in the data model for analytical purposes.
+
+
+Usage Note:
+	Run this query after data loading from silver
+	Investigate and resolve any descrepancies found during the check
+
+============================================
+*/
+--checiking view
+--checking for data standardization
+select * from gold.dim_customers
+select distinct gender from gold.dim_customers
+
+select * from gold.dim_products
+
+select * from gold.fact_sale
+
+--foreing key integrity
+select * from gold.fact_sale a
+left join
+gold.dim_customers b
+on a.customer_key = b.customer_key
+where b.customer_key is null
+
+select * from gold.fact_sale a
+left join
+gold.dim_products b
+on a.product_key = b.product_key
+where b.product_key is null
